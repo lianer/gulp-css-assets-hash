@@ -1,0 +1,6 @@
+body{
+	background: url("./a.jpg?_=aaaa");
+}
+body{
+	background: url("http://img.guahao.com/promo/img/a.jpg?_=aaaa");
+}

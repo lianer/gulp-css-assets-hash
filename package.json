@@ -1,11 +1,11 @@
 {
   "name": "gulp-css-assets-hash",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "为css中引用的图片资源增加hash后缀",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lianer/gulp-css-assets-hash"
+    "url": "git+https://github.com/lianer/gulp-css-assets-hash.git"
   },
   "scripts": {
     "start": "node ./index.js",
@@ -17,5 +17,19 @@
     "gulp-util": "^3.0.7",
     "through2": "^2.0.1",
     "urijs": "^1.18.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/lianer/gulp-css-assets-hash/issues"
+  },
+  "homepage": "https://github.com/lianer/gulp-css-assets-hash#readme",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "gulp",
+    "css",
+    "assets",
+    "hash",
+    "version"
+  ]
 }

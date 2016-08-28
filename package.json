@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "为css中引用的图片资源增加hash后缀",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lianer/gulp-css-assets-hash"
+  },
   "scripts": {
     "start": "node ./index.js",
     "test": "node ./test/gulpfile.js"

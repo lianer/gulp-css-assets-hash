@@ -1,54 +1,49 @@
-'use strict';
+var fs = require('fs')
+var path = require('path')
+var crypto = require('crypto')
+var through = require('through2')
+var URI = require('urijs')
 
-var fs = require('fs');
-var path = require('path');
-var crypto = require('crypto');
-var gutil = require('gulp-util');
-var through = require('through2');
-var URI = require('urijs');
-
-function sha1(filepath) {
+function sha1(cssdir, imgurl, filepath) {
 	try{
-		var file = fs.readFileSync(filepath);
-		return crypto.createHash('md5').update(file).digest('hex').slice(-7);
+		var file = fs.readFileSync(path.join(cssdir, imgurl))
+		return crypto.createHash('md5').update(file).digest('hex').slice(-7)
 	}catch(e){
-		console.warn(`[gulp-css-assets-hash] file ${filepath} not found`);
-		return '';
+		console.warn('[gulp-css-assets-hash] image ' + imgurl + ' is not found at ' + filepath)
+		return ''
 	}
 }
 
 module.exports = function (options) {
-	var reg = /(url\(['"]?)(.+?\.(?:png|jpg|gif))(.*?)(['"]?\))/igm;
-	var contents;
-	var uri;
-	var cssDir;
+	var reg = /(url\(['"]?)([^\)\"\']+?\.(?:png|jpg|gif|svg))([^\)\"\']*?)(['"]?\))/igm
 
 	return through.obj(function (file, enc, callback) {
-		cssDir = path.dirname(file.path);
+		var filepath = file.path
+		var cssdir = path.dirname(file.path)
 
 		if (file.isNull()) {
-			this.push(file);
-			return callback();
+			this.push(file)
+			return callback()
 		}
 
 		if (file.isStream()) {
-			this.emit('error', new gutil.PluginError('gulp-css-assets-hash', 'Streams are not supported!'));
-			return callback();
+			console.error('[gulp-css-assets-hash] Streams are not supported!')
+			return callback()
 		}
 
-		contents = file.contents.toString().replace(reg, function (content, left, filepath, query, right) {
-			uri = new URI(filepath + query);
+		var contents = file.contents.toString().replace(reg, function (content, left, imgurl, query, right) {
+			var uri = new URI(imgurl + query)
 			if(!uri.is('relative')){
-				return content;
+				return content
 			}
+			var hash = sha1(cssdir, imgurl, filepath)
+			uri.setQuery('_', hash)
+			return left + uri.toString() + right
+		})
 
-			uri.setQuery("_", sha1(path.join(cssDir, filepath)));
-			return left + uri.toString() + right;
-		});
+		file.contents = new Buffer(contents)
 
-		file.contents = new Buffer(contents);
-
-		this.push(file);
-		return callback();
+		this.push(file)
+		return callback()
 	})
-};
+}

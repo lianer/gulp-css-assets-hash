@@ -9,7 +9,7 @@ function sha1(cssdir, imgurl, filepath) {
 		var file = fs.readFileSync(path.join(cssdir, imgurl))
 		return crypto.createHash('md5').update(file).digest('hex').slice(-7)
 	}catch(e){
-		console.warn('[gulp-css-assets-hash] image ' + imgurl + ' is not found at ' + filepath)
+		console.warn('[gulp-css-assets-hash] ' + filepath + '  ' + imgurl + ' is not found')
 		return ''
 	}
 }

@@ -1,6 +1,6 @@
 {
   "name": "gulp-css-assets-hash",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "为css中引用的图片资源增加hash后缀",
   "main": "index.js",
   "repository": {

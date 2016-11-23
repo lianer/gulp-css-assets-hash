@@ -4,17 +4,21 @@ var crypto = require('crypto')
 var through = require('through2')
 var URI = require('urijs')
 
-function sha1(cssdir, imgurl, filepath) {
+function sha1(cssdir, imgurl, filepath, ignoreWarn) {
 	try{
 		var file = fs.readFileSync(path.join(cssdir, imgurl))
 		return crypto.createHash('md5').update(file).digest('hex').slice(-7)
 	}catch(e){
-		console.warn('[gulp-css-assets-hash] ' + filepath + '  ' + imgurl + ' is not found')
+		if (!ignoreWarn) {
+			console.warn('[gulp-css-assets-hash] ' + filepath + '  ' + imgurl + ' is not found')
+		}
 		return ''
 	}
 }
 
 module.exports = function (options) {
+	options = options || {}
+
 	var reg = /(url\(['"]?)([^\)\"\']+?\.(?:png|jpg|gif|svg))([^\)\"\']*?)(['"]?\))/igm
 
 	return through.obj(function (file, enc, callback) {
@@ -36,7 +40,7 @@ module.exports = function (options) {
 			if(!uri.is('relative')){
 				return content
 			}
-			var hash = sha1(cssdir, imgurl, filepath)
+			var hash = sha1(cssdir, imgurl, filepath, options.ignoreWarn)
 			uri.setQuery('_', hash)
 			return left + uri.toString() + right
 		})
